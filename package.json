@@ -1,0 +1,8 @@
+{
+  "name": "com.thirty1degrees.statemachine",
+  "displayName": "Thirty1Degrees State Machine",
+  "description": "Unity state machine.",
+  "version": "1.0.0",
+  "unity": "2022.3",
+  "type": "library"
+}
