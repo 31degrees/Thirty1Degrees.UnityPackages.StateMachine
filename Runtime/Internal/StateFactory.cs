@@ -22,22 +22,6 @@ namespace Thirty1Degrees.StateMachine.Internal
         }
 
         /// <summary>
-        /// Gets the state.
-        /// </summary>
-        /// <typeparam name="T">The state type.</typeparam>
-        /// <returns>The state.</returns>
-        public TState GetState<T>()
-            where T : TState
-        {
-            // Zenject doesn't like it when we resolve a singleton type at
-            // the same time on multiple threads.
-            lock (LockObject)
-            {
-                return diContainer.Resolve<T>();
-            }
-        }
-
-        /// <summary>
         /// Gets the state with a payload.
         /// </summary>
         /// <param name="payload">The payload.</param>
@@ -52,6 +36,17 @@ namespace Thirty1Degrees.StateMachine.Internal
             // The where clause makes this cast safe.
             ((IStatePayload<TPayload>)state).StatePayload = payload;
             return state;
+        }
+
+        private TState GetState<T>()
+            where T : TState
+        {
+            // Zenject doesn't like it when we resolve a singleton type at
+            // the same time on multiple threads.
+            lock (LockObject)
+            {
+                return diContainer.Resolve<T>();
+            }
         }
     }
 }
