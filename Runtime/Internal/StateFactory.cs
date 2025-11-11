@@ -21,12 +21,25 @@ namespace Thirty1Degrees.StateMachine.Internal
             this.diContainer = diContainer;
         }
 
-        /// <summary>
-        /// Gets the state.
-        /// </summary>
-        /// <typeparam name="T">The state type.</typeparam>
-        /// <returns>The state.</returns>
+        /// <inheritdoc />
         public TState GetState<T>()
+            where T : TState, IStatePayload<EmptyPayload>
+        {
+            return GetState<T, EmptyPayload>(new EmptyPayload());
+        }
+        
+        /// <inheritdoc />
+        public TState GetState<T, TPayload>(TPayload payload)
+            where T : TState, IStatePayload<TPayload>
+        {
+            TState state = Resolve<T>();
+
+            // The where clause makes this cast safe.
+            ((IStatePayload<TPayload>)state).StatePayload = payload;
+            return state;
+        }
+        
+        private T Resolve<T>()
             where T : TState
         {
             // Zenject doesn't like it when we resolve a singleton type at
@@ -35,23 +48,6 @@ namespace Thirty1Degrees.StateMachine.Internal
             {
                 return diContainer.Resolve<T>();
             }
-        }
-
-        /// <summary>
-        /// Gets the state with a payload.
-        /// </summary>
-        /// <param name="payload">The payload.</param>
-        /// <typeparam name="T">The state type.</typeparam>
-        /// <typeparam name="TPayload">The payload type.</typeparam>
-        /// <returns>The state.</returns>
-        public TState GetState<T, TPayload>(TPayload payload)
-            where T : TState, IStatePayload<TPayload>
-        {
-            TState state = GetState<T>();
-
-            // The where clause makes this cast safe.
-            ((IStatePayload<TPayload>)state).StatePayload = payload;
-            return state;
         }
     }
 }

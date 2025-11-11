@@ -6,12 +6,12 @@
     public interface IStateFactory<TState>
     {
         /// <summary>
-        /// Gets the state.
+        /// Gets the state with an empty payload.
         /// </summary>
         /// <typeparam name="T">The state type.</typeparam>
         /// <returns>The state.</returns>
         TState GetState<T>()
-            where T : TState;
+            where T : TState, IStatePayload<EmptyPayload>;
 
         /// <summary>
         /// Gets the state with a payload.
